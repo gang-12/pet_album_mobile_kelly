@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:petAblumMobile/core/theme/app_fonts_style_suit.dart';
 import 'package:petAblumMobile/core/theme/app_colors.dart';
 import 'package:petAblumMobile/features/presentation/pages/album_crud/album_edit_form.dart';
@@ -27,10 +28,10 @@ class MenuBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
         ),
       ),
       child: SafeArea(
@@ -56,9 +57,8 @@ class MenuBottomSheet extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 20),
             _MenuItem(
-              icon: Icons.edit_outlined,
               label: '편집',
               onTap: () {
                 Navigator.push(
@@ -68,25 +68,68 @@ class MenuBottomSheet extends StatelessWidget {
                   ),
                 );
               },
+                icon: SvgPicture.asset(
+                  'assets/system/icons/icon_edit.svg',
+                  width: 24,
+                  height: 24,
+                  colorFilter: ColorFilter.mode(
+                    AppColors.f05,
+                    BlendMode.srcIn,
+                  ),
+                )
             ),
             _MenuItem(
-              icon: Icons.copy_outlined,
               label: '복사',
               onTap: () {
                 Navigator.pop(context);
                 onCopy();
               },
+              icon: SvgPicture.asset(
+                'assets/system/icons/icon_copy.svg',
+                width: 24,
+                height: 24,
+                colorFilter: ColorFilter.mode(
+                  AppColors.f05,
+                  BlendMode.srcIn,
+                ),
+              ),
             ),
             _MenuItem(
-              icon: Icons.share_outlined,
               label: '공유',
               onTap: () {
                 Navigator.pop(context);
                 onShare();
               },
+                icon: SvgPicture.asset(
+                  'assets/system/icons/icon_share.svg',
+                  width: 24,
+                  height: 24,
+                  colorFilter: ColorFilter.mode(
+                    AppColors.f05,
+                    BlendMode.srcIn,
+                  ),
+                )
             ),
             _MenuItem(
-              icon: isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+              icon: isBookmarked
+                  ? SvgPicture.asset(
+                'assets/system/icons/icon_bookmark_add.svg',
+                width: 24,
+                height: 24,
+                colorFilter: ColorFilter.mode(
+                  AppColors.f05,
+                  BlendMode.srcIn,
+                ),
+              )
+                  : SvgPicture.asset(
+                'assets/system/icons/icon_bookmark.svg',
+                width: 24,
+                height: 24,
+                colorFilter: ColorFilter.mode(
+                  AppColors.f05,
+                  BlendMode.srcIn,
+                ),
+              ),
               label: '북마크',
               onTap: () {
                 Navigator.pop(context);
@@ -94,13 +137,21 @@ class MenuBottomSheet extends StatelessWidget {
               },
             ),
             _MenuItem(
-              icon: Icons.delete_outline,
               label: '삭제',
               isDelete: true,
               onTap: () {
                 Navigator.pop(context);
                 onDelete();
               },
+                icon: SvgPicture.asset(
+                  'assets/system/icons/icon_delete.svg',
+                  width: 24,
+                  height: 24,
+                  colorFilter: ColorFilter.mode(
+                    AppColors.f05,
+                    BlendMode.srcIn,
+                  ),
+                )
             ),
             const SizedBox(height: 16),
           ],
@@ -136,7 +187,7 @@ class MenuBottomSheet extends StatelessWidget {
 }
 
 class _MenuItem extends StatelessWidget {
-  final IconData icon;
+  final Widget icon;
   final String label;
   final VoidCallback onTap;
   final bool isDelete;
@@ -157,11 +208,7 @@ class _MenuItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: Row(
           children: [
-            Icon(
-              icon,
-              size: 24,
-              color: isDelete ? Colors.red : AppColors.f05,
-            ),
+            icon,
             const SizedBox(width: 16),
             Text(
               label,

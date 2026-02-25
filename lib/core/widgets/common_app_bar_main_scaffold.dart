@@ -20,18 +20,15 @@ class CommonMainAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-
-
       backgroundColor: AppColors.gray00,
       elevation: 0,
-      centerTitle: false,
-      leadingWidth: 120,
-      leading: leadingContent == null
-          ? null
-          : Padding(
-        padding: leadingPadding ?? EdgeInsets.zero,
-        child: leadingContent,
-      ),
+      surfaceTintColor: Colors.transparent, //스크롤하면 색 달라지는 것 수정
+
+      automaticallyImplyLeading: false,
+
+      titleSpacing: 20, //좌측 패딩 20
+      actionsPadding: const EdgeInsets.only(right: 20), //우측 패딩 20
+
       title: Text(
         title,
         style: AppTextStyle.subtitle20M120.copyWith(

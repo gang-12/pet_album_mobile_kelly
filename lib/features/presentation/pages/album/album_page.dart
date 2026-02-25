@@ -1,5 +1,6 @@
 // album_page.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:petAblumMobile/core/theme/app_colors.dart';
 import 'package:petAblumMobile/core/theme/app_text_semantic.dart';
 import 'package:petAblumMobile/core/theme/app_fonts_style_suit.dart';
@@ -8,7 +9,6 @@ import 'package:petAblumMobile/features/presentation/pages/album/album_grid_item
 import 'package:petAblumMobile/features/presentation/pages/album/album_common_actions.dart';
 import 'package:petAblumMobile/features/presentation/pages/album/album_search_page.dart';
 import 'package:petAblumMobile/features/presentation/pages/album_crud/album_view.dart';
-
 class AlbumPage extends StatefulWidget {
   const AlbumPage({super.key});
 
@@ -37,26 +37,50 @@ class _AlbumPageState extends State<AlbumPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: AppColors.gray00,
       appBar: CommonMainAppBar(
         title: '',
         actions: [
-          IconButton(icon: const Icon(Icons.search), onPressed: () {
-              Navigator.push(context, MaterialPageRoute(
-                builder: (_) => const AlbumSearch(),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const AlbumSearch()),
+              );
+            },
+              icon: SvgPicture.asset(
+                'assets/system/icons/icon_search.svg',
+                width: 24,
+                height: 24,
+                colorFilter: ColorFilter.mode(
+                  AppColors.f05, // 아이콘 색
+                  BlendMode.srcIn,
+                ),
               ),
-            );},
           ),
-          IconButton(icon: const Icon(Icons.apps), onPressed: () {}),
+          TextButton(
+            onPressed: () {},
+            style: TextButton.styleFrom(
+              foregroundColor: AppColors.f05,
+              minimumSize: const Size(44, 44),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: Text(
+              '선택',
+              style: AppTextStyle.body16R120.copyWith(
+                color: AppColors.f05,
+              ),
+            ),
+          ),
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
             Expanded(
               child: GridView.builder(
                 itemCount: filteredAlbums.length,
@@ -98,10 +122,16 @@ class _AlbumPageState extends State<AlbumPage> {
         ),
         const Spacer(),
         IconButton(
-          icon: Icon(
+          icon: SvgPicture.asset(
             showOnlyBookmarked
-                ? Icons.bookmark
-                : Icons.bookmark_border,
+                ? 'assets/system/icons/icon_bookmark_add.svg'
+                : 'assets/system/icons/icon_bookmark.svg',
+            width: 24,
+            height: 24,
+            colorFilter: ColorFilter.mode(
+              AppColors.f05, // 아이콘 색
+              BlendMode.srcIn,
+            ),
           ),
           onPressed: () {
             setState(() {

@@ -20,9 +20,9 @@ class HomePage extends StatelessWidget {
             Navigator.push(context, MaterialPageRoute(
               builder: (_) => const AlarmPage(),
             ),
-            );},
+            );
+            },
           ),
-          IconButton(icon: const Icon(Icons.apps), onPressed: () {}),
         ],
       ),
       body : SafeArea(
