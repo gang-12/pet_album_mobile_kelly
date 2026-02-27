@@ -148,7 +148,7 @@ class MenuBottomSheet extends StatelessWidget {
                   width: 24,
                   height: 24,
                   colorFilter: ColorFilter.mode(
-                    AppColors.f05,
+                    AppColors.red,
                     BlendMode.srcIn,
                   ),
                 )

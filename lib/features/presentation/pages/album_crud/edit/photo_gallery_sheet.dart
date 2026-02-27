@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:petAblumMobile/core/theme/app_colors.dart';
 import 'package:petAblumMobile/core/theme/app_fonts_style_suit.dart';
 
@@ -10,7 +10,6 @@ class PhotoGalleryBottomSheet extends StatefulWidget {
   @override
   State<PhotoGalleryBottomSheet> createState() => _PhotoGalleryBottomSheetState();
 
-  /// 바텀시트를 표시하는 헬퍼 메서드
   static Future<List<int>?> show(BuildContext context) {
     return showModalBottomSheet<List<int>>(
       context: context,
@@ -33,7 +32,6 @@ class _PhotoGalleryBottomSheetState extends State<PhotoGalleryBottomSheet> {
     super.dispose();
   }
 
-  // 데모용 사진 데이터
   final List<PhotoItem> photos = List.generate(
     20,
         (index) {
@@ -74,9 +72,22 @@ class _PhotoGalleryBottomSheetState extends State<PhotoGalleryBottomSheet> {
       maxChildSize: 0.95,
       builder: (context, scrollController) {
         return Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+            border: Border(
+              top: BorderSide(color: AppColors.gray01, width: 1.5),
+              left: BorderSide(color: AppColors.gray01, width: 1.5),
+              right: BorderSide(color: AppColors.gray01, width: 1.5),
+            ),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x0A000000), // rgba(0,0,0,0.04)
+                offset: Offset(0, -4),
+                blurRadius: 12,
+                spreadRadius: 0,
+              ),
+            ],
           ),
           child: Column(
             children: [
@@ -90,20 +101,24 @@ class _PhotoGalleryBottomSheetState extends State<PhotoGalleryBottomSheet> {
                   color: Colors.white,
                   child: Column(
                     children: [
-                      // 드래그 핸들
-                      Container(
-                        margin: const EdgeInsets.only(top: 12, bottom: 8),
-                        width: 40,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[400],
-                          borderRadius: BorderRadius.circular(2),
+                      // 핸들바 (54x4, gray03, radius 30)
+                      Center(
+                        child: Container(
+                          margin: const EdgeInsets.only(top: 12),
+                          width: 54,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: AppColors.gray03,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
                         ),
                       ),
 
+                      const SizedBox(height: 20),
+
                       // 헤더 (필터 + 업로드 버튼)
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -119,17 +134,19 @@ class _PhotoGalleryBottomSheetState extends State<PhotoGalleryBottomSheet> {
                                 children: [
                                   Text(
                                     selectedFilter,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
+                                    style: AppTextStyle.body16M120.copyWith(
+                                      color: AppColors.f05,
                                     ),
                                   ),
                                   const SizedBox(width: 4),
-                                  Icon(
-                                    Icons.keyboard_arrow_down,
-                                    color: Colors.grey[700],
-                                    size: 20,
+                                  SvgPicture.asset(
+                                    'assets/system/icons/icon_expand_more.svg',
+                                    width: 24,
+                                    height: 24,
+                                    colorFilter: ColorFilter.mode(
+                                      AppColors.f05,
+                                      BlendMode.srcIn,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -147,34 +164,32 @@ class _PhotoGalleryBottomSheetState extends State<PhotoGalleryBottomSheet> {
                             ),
 
                             // 업로드 버튼
-                            ElevatedButton(
-                              onPressed: selectedPhotos.isNotEmpty ? onUpload : null,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF3B3B3B),
-                                disabledBackgroundColor: Colors.grey[300],
-                                foregroundColor: Colors.white,
-                                disabledForegroundColor: Colors.grey[500],
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
+                            GestureDetector(
+                              onTap: selectedPhotos.isNotEmpty ? onUpload : null,
+                              child: Container(
                                 padding: const EdgeInsets.symmetric(
-                                  horizontal: 24,
+                                  horizontal: 20,
                                   vertical: 10,
                                 ),
-                                elevation: 0,
-                              ),
-                              child: const Text(
-                                '업로드',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
+                                decoration: BoxDecoration(
+                                  color: selectedPhotos.isNotEmpty
+                                      ? const Color(0xFF424242)
+                                      : AppColors.black,
+                                  borderRadius: BorderRadius.circular(60),
+                                ),
+                                child: Text(
+                                  '업로드',
+                                  style: AppTextStyle.description14M120.copyWith(
+                                    color: AppColors.f01,
+                                  ),
                                 ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 4),
+
+                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
@@ -204,13 +219,20 @@ class _PhotoGalleryBottomSheetState extends State<PhotoGalleryBottomSheet> {
                               child: Stack(
                                 fit: StackFit.expand,
                                 children: [
+                                  // 카메라 or 사진 셀
                                   if (photo.type == PhotoType.camera)
                                     Container(
-                                      color: Colors.grey[300],
-                                      child: Icon(
-                                        Icons.camera_alt_outlined,
-                                        size: 48,
-                                        color: Colors.grey[600],
+                                      color: AppColors.gray01,
+                                      child: Center(
+                                        child: SvgPicture.asset(
+                                          'assets/system/icons/icon_camera.svg',
+                                          width: 32,
+                                          height: 32,
+                                          colorFilter: ColorFilter.mode(
+                                            AppColors.gray04,
+                                            BlendMode.srcIn,
+                                          ),
+                                        ),
                                       ),
                                     )
                                   else
@@ -219,16 +241,23 @@ class _PhotoGalleryBottomSheetState extends State<PhotoGalleryBottomSheet> {
                                       fit: BoxFit.cover,
                                       errorBuilder: (context, error, stackTrace) {
                                         return Container(
-                                          color: Colors.grey[300],
-                                          child: Icon(
-                                            Icons.image,
-                                            size: 48,
-                                            color: Colors.grey[600],
+                                          color: AppColors.gray01,
+                                          child: Center(
+                                            child: SvgPicture.asset(
+                                              'assets/system/icons/icon_add_photo.svg',
+                                              width: 32,
+                                              height: 32,
+                                              colorFilter: ColorFilter.mode(
+                                                AppColors.gray04,
+                                                BlendMode.srcIn,
+                                              ),
+                                            ),
                                           ),
                                         );
                                       },
                                     ),
 
+                                  // 선택 오버레이
                                   if (isSelected)
                                     Container(
                                       decoration: BoxDecoration(
@@ -240,6 +269,7 @@ class _PhotoGalleryBottomSheetState extends State<PhotoGalleryBottomSheet> {
                                       ),
                                     ),
 
+                                  // 선택 체크 아이콘
                                   if (photo.type == PhotoType.image)
                                     Positioned(
                                       top: 8,
@@ -272,6 +302,7 @@ class _PhotoGalleryBottomSheetState extends State<PhotoGalleryBottomSheet> {
                                       ),
                                     ),
 
+                                  // 비디오 아이콘
                                   if (photo.hasVideo)
                                     Positioned(
                                       bottom: 8,
@@ -331,16 +362,11 @@ class _PhotoGalleryBottomSheetState extends State<PhotoGalleryBottomSheet> {
     final isSelected = selectedFilter == title;
     return PopupMenuItem<String>(
       value: title,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: AppTextStyle.body16M120.copyWith(
-              color: isSelected ? AppColors.f01 : AppColors.f01,
-            ),
-          ),
-        ],
+      child: Text(
+        title,
+        style: AppTextStyle.body16M120.copyWith(
+          color: isSelected ? AppColors.f05 : AppColors.f03,
+        ),
       ),
     );
   }

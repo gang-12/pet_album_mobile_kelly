@@ -9,6 +9,8 @@ import 'package:petAblumMobile/features/presentation/pages/album/album_grid_item
 import 'package:petAblumMobile/features/presentation/pages/album/album_common_actions.dart';
 import 'package:petAblumMobile/features/presentation/pages/album/album_search_page.dart';
 import 'package:petAblumMobile/features/presentation/pages/album_crud/album_view.dart';
+import 'package:petAblumMobile/features/presentation/pages/album_crud/album_edit_form.dart';
+
 class AlbumPage extends StatefulWidget {
   const AlbumPage({super.key});
 
@@ -23,21 +25,18 @@ class _AlbumPageState extends State<AlbumPage> {
   @override
   void initState() {
     super.initState();
-    albums = List.from(mockAlbums); // 복사본 생성
+    albums = List.from(mockAlbums);
   }
 
   List<Map<String, String>> get filteredAlbums {
     if (!showOnlyBookmarked) return albums;
-
-    return albums
-        .where((album) => album['isBookmarked'] == 'true')
-        .toList();
+    return albums.where((album) => album['isBookmarked'] == 'true').toList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.gray00,
+      backgroundColor: AppColors.white,
       appBar: CommonMainAppBar(
         title: '',
         actions: [
@@ -48,15 +47,15 @@ class _AlbumPageState extends State<AlbumPage> {
                 MaterialPageRoute(builder: (_) => const AlbumSearch()),
               );
             },
-              icon: SvgPicture.asset(
-                'assets/system/icons/icon_search.svg',
-                width: 24,
-                height: 24,
-                colorFilter: ColorFilter.mode(
-                  AppColors.f05, // 아이콘 색
-                  BlendMode.srcIn,
-                ),
+            icon: SvgPicture.asset(
+              'assets/system/icons/icon_search.svg',
+              width: 24,
+              height: 24,
+              colorFilter: const ColorFilter.mode(
+                AppColors.f05,
+                BlendMode.srcIn,
               ),
+            ),
           ),
           TextButton(
             onPressed: () {},
@@ -67,9 +66,7 @@ class _AlbumPageState extends State<AlbumPage> {
             ),
             child: Text(
               '선택',
-              style: AppTextStyle.body16R120.copyWith(
-                color: AppColors.f05,
-              ),
+              style: AppTextStyle.body16R120.copyWith(color: AppColors.f05),
             ),
           ),
         ],
@@ -82,26 +79,38 @@ class _AlbumPageState extends State<AlbumPage> {
             _buildHeader(),
             const SizedBox(height: 20),
             Expanded(
-              child: GridView.builder(
-                itemCount: filteredAlbums.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 0.8,
-                ),
-                itemBuilder: (context, index) {
-                  final album = filteredAlbums[index];
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  const int crossAxisCount = 2;
+                  // horizontal gap auto: 전체 너비를 2등분
+                  final double itemWidth = constraints.maxWidth / crossAxisCount;
+                  final double imageHeight = itemWidth * 4 / 3; // 3:4 비율
+                  const double labelHeight = 24.0; // 타이틀 행 높이
+                  const double gap = 8.0;          // 이미지-타이틀 gap
+                  final double childAspectRatio =
+                      itemWidth / (imageHeight + gap + labelHeight);
 
-                  return AlbumGridItem(
-                    title: album['title']!,
-                    imageUrl: album['imageUrl']!,
-                    isBookmarked: album['isBookmarked'] == 'true',
-                    onTap: () {
-                      _handleMenuTap(
-                        album['title']!,
-                        album['id']!,
-                        album['isBookmarked'] == 'true',
+                  return GridView.builder(
+                    itemCount: filteredAlbums.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      crossAxisSpacing: 12,   // horizontal: auto (2등분)
+                      mainAxisSpacing: 20,   // vertical gap between rows: 20
+                      childAspectRatio: childAspectRatio,
+                    ),
+                    itemBuilder: (context, index) {
+                      final album = filteredAlbums[index];
+                      return AlbumGridItem(
+                        title: album['title']!,
+                        imageUrl: album['imageUrl']!,
+                        isBookmarked: album['isBookmarked'] == 'true',
+                        onTap: () {
+                          _handleMenuTap(
+                            album['title']!,
+                            album['id']!,
+                            album['isBookmarked'] == 'true',
+                          );
+                        },
                       );
                     },
                   );
@@ -117,8 +126,9 @@ class _AlbumPageState extends State<AlbumPage> {
   Widget _buildHeader() {
     return Row(
       children: [
-        Text('나의 앨범', style: AppTextStyle.titlePage28Sb130.
-        copyWith(color: AppColors.f05)
+        Text(
+          '나의 앨범',
+          style: AppTextStyle.titlePage28Sb130.copyWith(color: AppColors.f05),
         ),
         const Spacer(),
         IconButton(
@@ -128,8 +138,8 @@ class _AlbumPageState extends State<AlbumPage> {
                 : 'assets/system/icons/icon_bookmark.svg',
             width: 24,
             height: 24,
-            colorFilter: ColorFilter.mode(
-              AppColors.f05, // 아이콘 색
+            colorFilter: const ColorFilter.mode(
+              AppColors.f05,
               BlendMode.srcIn,
             ),
           ),
@@ -154,9 +164,20 @@ class _AlbumPageState extends State<AlbumPage> {
       ),
       child: IconButton(
         padding: EdgeInsets.zero,
-        icon: const Icon(Icons.add, color: Colors.white),
+        icon: SvgPicture.asset(
+          'assets/system/icons/icon_add.svg',
+          width: 24,
+          height: 24,
+          colorFilter: const ColorFilter.mode(
+            AppColors.white,
+            BlendMode.srcIn,
+          ),
+        ),
         onPressed: () {
-
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const AlbumEditFormPage()),
+          );
         },
       ),
     );
