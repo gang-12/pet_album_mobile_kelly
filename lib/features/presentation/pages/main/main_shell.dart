@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:petAblumMobile/core/widgets/common_navigation_scaffold.dart';
+import 'package:petAblumMobile/features/presentation/pages/album/album_grid_item.dart';
 import 'package:petAblumMobile/features/presentation/pages/album/album_page.dart';
 import 'package:petAblumMobile/features/presentation/pages/main/home_page.dart';
 import 'package:petAblumMobile/features/presentation/pages/main/my_page.dart';

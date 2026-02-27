@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:petAblumMobile/core/theme/app_button_theme.dart';
+import 'package:petAblumMobile/core/theme/app_fonts_style_suit.dart';
 import 'package:petAblumMobile/core/widgets/common_app_back_bar_scaffold.dart';
-
 import 'package:petAblumMobile/core/theme/app_colors.dart';
 import 'package:petAblumMobile/features/presentation/pages/pet_crud/pet_info_form.dart';
 
@@ -20,6 +19,7 @@ class PetTypCreatePage extends StatelessWidget {
           children: const [
             SizedBox(height: 16),
             _TitleText(),
+            SizedBox(height: 120), // 👈 여기 120 줌
             _PetTypeRow(),
           ],
         ),
@@ -33,14 +33,10 @@ class _TitleText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text(
+    return Text(
       '어떤 반려동물을\n키우고 계신가요?',
-      style: TextStyle(
-        fontSize: 28,
-        fontWeight: FontWeight.w600,
-        height: 1.3,
-        letterSpacing: -0.42,
-        color: AppColors.f01,
+      style: AppTextStyle.titlePage28Sb130.copyWith(
+        color: AppColors.f05,
       ),
     );
   }
@@ -57,37 +53,38 @@ class _PetTypeRow extends StatelessWidget {
         Expanded(
           child: _PetTypeCard(
             label: '강아지',
-            onTap: _noop,
           ),
         ),
-        SizedBox(width: 16),
+        const SizedBox(width: 16),
         Expanded(
           child: _PetTypeCard(
             label: '고양이',
-            onTap: _noop,
           ),
         ),
       ],
     );
   }
-
-  static void _noop() {}
 }
 
 /// 반려동물 선택 카드
 class _PetTypeCard extends StatelessWidget {
   final String label;
-  final VoidCallback onTap;
 
   const _PetTypeCard({
     required this.label,
-    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const PetInfoEditor(),
+          ),
+        );
+      },
       child: Container(
         height: 207,
         padding: const EdgeInsets.fromLTRB(57, 12, 57, 12),
@@ -95,7 +92,7 @@ class _PetTypeCard extends StatelessWidget {
           color: const Color(0xFFEEEEEE),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: AppColors.f01, // #E0E0E0
+            color: AppColors.gray01,
             width: 1,
           ),
         ),
@@ -104,22 +101,10 @@ class _PetTypeCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 10),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const PetInfoEditor(),
-                  ),
-                );
-              },
-              child:Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.f01,
-                ),
+            Text(
+              label,
+              style: AppTextStyle.body16M120.copyWith(
+                color: AppColors.f05,
               ),
             ),
           ],

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:petAblumMobile/core/theme/app_colors.dart';
 import 'package:petAblumMobile/core/widgets/common_app_bar_main_scaffold.dart';
+import 'package:petAblumMobile/features/presentation/pages/album/album_grid_item.dart';
 import 'package:petAblumMobile/features/presentation/pages/album/album_page.dart';
 
 class AlbumViewPage extends StatefulWidget {

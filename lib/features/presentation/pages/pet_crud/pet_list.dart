@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:petAblumMobile/core/theme/app_colors.dart';
+import 'package:petAblumMobile/core/theme/app_fonts_style_suit.dart';
 import 'package:petAblumMobile/core/widgets/common_app_back_bar_scaffold.dart';
-import 'package:petAblumMobile/core/widgets/common_navigation_scaffold.dart';
 import 'package:petAblumMobile/core/widgets/delete_modal.dart';
 import 'package:petAblumMobile/core/widgets/pet_card.dart';
 import 'package:petAblumMobile/features/presentation/pages/pet_crud/pet_type_create.dart';
@@ -42,7 +42,6 @@ class _PetListPageState extends State<PetListPage> {
       context: context,
       content: '${_selectedPets.length}개의 반려동물을 삭제하시겠습니까?',
       onConfirm: () {
-        // 백엔드API
         setState(() {
           _selectedPets.clear();
           _isDeleteMode = false;
@@ -50,6 +49,7 @@ class _PetListPageState extends State<PetListPage> {
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,36 +59,52 @@ class _PetListPageState extends State<PetListPage> {
             ? [
           TextButton(
             onPressed: _selectedPets.isEmpty ? null : _deleteSelectedPets,
+            style: TextButton.styleFrom(
+              minimumSize: Size.zero,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
             child: Text(
               '삭제',
-              style: TextStyle(
-                color: _selectedPets.isEmpty ? Colors.grey : Colors.red,
-                fontSize: 16,
+              style: AppTextStyle.description14R120.copyWith(
+                color: _selectedPets.isEmpty ? AppColors.gray03 : AppColors.red,
               ),
             ),
           ),
           TextButton(
             onPressed: _toggleDeleteMode,
-            child: const Text(
-              '취소',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 16,
+            style: TextButton.styleFrom(
+              minimumSize: Size.zero,
+              padding: const EdgeInsets.only(left: 8, right: 20),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: Text(
+              '닫기',
+              style: AppTextStyle.description14R120.copyWith(
+                color: AppColors.f05,
               ),
             ),
           ),
         ]
             : [
-          IconButton(
-            onPressed: _toggleDeleteMode,
-            icon: const Icon(
-              Icons.delete_outline,
-              color: Colors.black,
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: IconButton(
+              onPressed: _toggleDeleteMode,
+              icon: SvgPicture.asset(
+                'assets/system/icons/icon_delete.svg',
+                width: 24,
+                height: 24,
+                colorFilter: const ColorFilter.mode(
+                  AppColors.f05,
+                  BlendMode.srcIn,
+                ),
+              ),
             ),
           ),
         ],
       ),
-      backgroundColor: AppColors.f01,
+      backgroundColor: AppColors.bg,
       body: ListView(
         padding: const EdgeInsets.all(24),
         children: [
@@ -96,7 +112,7 @@ class _PetListPageState extends State<PetListPage> {
           const SizedBox(height: 12),
           _buildPetCard(1),
           const SizedBox(height: 24),
-          if (!_isDeleteMode) _AddPetButton(),
+          if (!_isDeleteMode) const _AddPetButton(),
         ],
       ),
     );
@@ -120,21 +136,13 @@ class _PetListPageState extends State<PetListPage> {
         child: Container(
           width: 24,
           height: 24,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: isSelected ? Colors.red : Colors.grey,
-              width: 2,
-            ),
-            color: isSelected ? Colors.red : Colors.transparent,
+          child: SvgPicture.asset(
+            isSelected
+                ? 'assets/system/icons/icon_radio_on.svg'
+                : 'assets/system/icons/icon_radio_off.svg',
+            width: 24,
+            height: 24,
           ),
-          child: isSelected
-              ? const Icon(
-            Icons.close,
-            size: 16,
-            color: Colors.white,
-          )
-              : null,
         ),
       )
           : null,
@@ -144,29 +152,42 @@ class _PetListPageState extends State<PetListPage> {
 }
 
 class _AddPetButton extends StatelessWidget {
+  const _AddPetButton();
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(
-          builder: (_) => const PetTypCreatePage(),
-        ));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const PetTypCreatePage(),
+          ),
+        );
       },
       child: Container(
         height: 56,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: AppColors.f01,
-            width: 1,
-          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              offset: const Offset(0, 4),
+              blurRadius: 12,
+              spreadRadius: 0,
+            ),
+          ],
         ),
-        child: const Center(
-          child: Icon(
-            Icons.add,
-            size: 24,
-            color: Colors.grey,
+        child: Center(
+          child: SvgPicture.asset(
+            'assets/system/icons/icon_add.svg',
+            width: 24,
+            height: 24,
+            colorFilter: const ColorFilter.mode(
+              AppColors.f05,
+              BlendMode.srcIn,
+            ),
           ),
         ),
       ),

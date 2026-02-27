@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:petAblumMobile/core/theme/app_colors.dart';
 import 'package:petAblumMobile/core/theme/app_fonts_style_suit.dart';
-import 'package:petAblumMobile/core/theme/app_text_semantic.dart';
 
 class AppTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -11,6 +9,7 @@ class AppTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final ValueChanged<String>? onChanged;
   final Widget? prefixIcon;
+  final FocusNode? focusNode; // 추가
 
   const AppTextField({
     super.key,
@@ -20,17 +19,19 @@ class AppTextField extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.onChanged,
+    this.focusNode, // 추가
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 55,
-      width: 350,
+      width: double.infinity, // 350 고정 → 부모 너비에 맞게
       child: TextField(
         controller: controller,
+        focusNode: focusNode, // 추가
         obscureText: obscureText,
-        style : AppTextStyle.body16R120.copyWith(
+        style: AppTextStyle.body16R120.copyWith(
           color: AppColors.f03,
         ),
         decoration: InputDecoration(
